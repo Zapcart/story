@@ -1,0 +1,76 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/images"
+public_folder: "/assets/images"
+
+site_url: https://desistory.in
+
+collections:
+  # Stories Collection
+  - name: "stories"
+    label: "Stories"
+    folder: "content/stories"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - { label: "Slug", name: "slug", widget: "string", required: true }
+      - { label: "Category", name: "category", widget: "relation", collection: "categories", searchFields: ["name"], valueField: "slug", displayFields: ["name"], required: true }
+      - { label: "Featured", name: "featured", widget: "boolean", default: false, required: false }
+      - { label: "Cover Image", name: "cover_image", widget: "image", required: false, hint: "Recommended size: 1200x800px" }
+      - { label: "Excerpt", name: "excerpt", widget: "text", required: true, hint: "Brief description for story cards" }
+      - { label: "Publish Date", name: "publish_date", widget: "datetime", required: true, format: "YYYY-MM-DD HH:mm:ss", default: "{{now}}" }
+      - { label: "Status", name: "status", widget: "select", options: ["draft", "published"], default: "published", required: true }
+      - { label: "Content", name: "body", widget: "markdown", required: true }
+      - { label: "Tags", name: "tags", widget: "list", required: false, field: { label: "Tag", name: "tag", widget: "string" } }
+
+  # Categories Collection
+  - name: "categories"
+    label: "Categories"
+    folder: "content/categories"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Name", name: "name", widget: "string", required: true }
+      - { label: "Slug", name: "slug", widget: "string", required: true }
+      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Category Image", name: "category_image", widget: "image", required: false, hint: "Recommended size: 400x400px" }
+      - { label: "Icon", name: "icon", widget: "string", required: false, hint: "Emoji icon for category" }
+
+  # Homepage Settings
+  - name: "homepage"
+    label: "Homepage"
+    files:
+      - file: "content/homepage.json"
+        label: "Homepage Settings"
+        name: "homepage"
+        fields:
+          - { label: "Hero Title", name: "hero_title", widget: "string", default: "Discover Amazing Hindi Stories", required: true }
+          - { label: "Hero Subtitle", name: "hero_subtitle", widget: "text", default: "Explore our collection of traditional folk tales, modern narratives, and cultural stories from India", required: true }
+          - { label: "Hero Image", name: "hero_image", widget: "image", required: false, hint: "Background image for hero section" }
+          - { label: "Featured Section Title", name: "featured_section_title", widget: "string", default: "Featured Story", required: true }
+          - { label: "Latest Section Title", name: "latest_section_title", widget: "string", default: "Latest Stories", required: true }
+          - { label: "Latest Story Count", name: "latest_story_count", widget: "number", default: 6, required: true, hint: "Number of stories to show on homepage" }
+          - { label: "Search Placeholder", name: "search_placeholder", widget: "string", default: "Search stories, categories, or keywords...", required: true }
+
+  # Site Settings
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - file: "content/site.json"
+        label: "Site Configuration"
+        name: "site"
+        fields:
+          - { label: "Site Name", name: "site_name", widget: "string", default: "DesiStory", required: true }
+          - { label: "Tagline", name: "tagline", widget: "string", default: "दिल से लिखी कहानियाँ", required: true }
+          - { label: "Logo", name: "logo", widget: "image", required: false, hint: "Site logo image" }
+          - { label: "Footer Text", name: "footer_text", widget: "text", default: "दिल से लिखी कहानियाँ - Your destination for amazing Hindi stories and cultural narratives.", required: true }
+          - { label: "Meta Description", name: "meta_description", widget: "text", default: "Read amazing Hindi stories, folk tales, and modern narratives. Discover the best collection of desi stories.", required: true }
+          - { label: "Social Links", name: "social_links", widget: "list", required: false, field: { label: "Social Link", name: "social_link", widget: "object", fields: [
+              { label: "Platform", name: "platform", widget: "select", options: ["Facebook", "Twitter", "Instagram", "YouTube"], required: true },
+              { label: "URL", name: "url", widget: "string", required: true }
+            ]}}
+          - { label: "Google Analytics ID", name: "google_analytics_id", widget: "string", required: false }
+          - { label: "AdSense Publisher ID", name: "adsense_publisher_id", widget: "string", required: false }
