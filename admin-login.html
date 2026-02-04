@@ -32,7 +32,7 @@
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           alert("Login Success");
-          window.location.href = "admin.html";
+          window.location.href = "/admin/index.html";
         })
         .catch(err => {
           document.getElementById("msg").innerText = err.message;
