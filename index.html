@@ -1,139 +1,184 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DesiStory - दिल से लिखी कहानियाँ</title>
-    <meta name="description" content="Read amazing Hindi stories, folk tales, and modern narratives. Discover the best collection of desi stories.">
-    <meta name="keywords" content="hindi stories, desi stories, indian tales, folk stories">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>DesiStory - दिल से लिखी कहानियाँ</title>
+  <meta name="description" content="Read amazing Hindi stories, folk tales, and modern narratives. Discover the best collection of desi stories.">
+  <meta name="keywords" content="hindi stories, desi stories, indian tales, folk stories">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+
 </head>
 <body>
-    <header class="header">
-        <nav class="nav">
-            <div class="container">
-                <div class="nav-brand">
-                    <h1><a href="/">DesiStory</a></h1>
-                    <span class="nav-tagline">दिल से लिखी कहानियाँ</span>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="/" class="nav-link active">Home</a></li>
-                    <li><a href="#stories" class="nav-link">Stories</a></li>
-                    <li><a href="#categories" class="nav-link">Categories</a></li>
-                </ul>
-                <div class="nav-toggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
-        </nav>
-    </header>
 
-    <main class="main">
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1 class="hero-headline">Discover Amazing Hindi Stories</h1>
-                    <p class="hero-tagline">Explore our collection of traditional folk tales, modern narratives, and cultural stories from India</p>
-                    
-                    <div class="featured-story">
-                        <span class="featured-story-label">✨ Featured Story</span>
-                        <div class="featured-story-card" id="featuredStoryCard">
-                            <!-- Featured story will be loaded dynamically -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+<!-- ================= HEADER ================= -->
+<header class="header">
+  <nav class="nav">
+    <div class="container">
 
-        <section class="search-section">
-            <div class="container">
-                <div class="search-container">
-                    <label class="search-label">Search for your favorite stories</label>
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Search stories, categories, or keywords...">
-                        <button id="searchBtn">Search</button>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <div class="nav-brand">
+        <img id="siteLogo" src="assets/logo.png" alt="DesiStory Logo" style="height:40px;">
+        <h1><a href="/" id="siteTitle">DesiStory</a></h1>
+        <span class="nav-tagline">दिल से लिखी कहानियाँ</span>
+      </div>
 
-        <section id="categories" class="categories">
-            <div class="container">
-                <div class="categories-header">
-                    <h2>Explore Categories</h2>
-                    <p>Discover stories across different genres and themes</p>
-                </div>
-                <div class="category-grid" id="categoryGrid">
-                    <!-- Categories will be loaded here -->
-                </div>
-            </div>
-        </section>
+      <ul class="nav-menu">
+        <li><a href="/" class="nav-link active">Home</a></li>
+        <li><a href="#stories" class="nav-link">Stories</a></li>
+        <li><a href="#categories" class="nav-link">Categories</a></li>
+      </ul>
 
-        <section id="stories" class="latest-stories">
-            <div class="container">
-                <div class="stories-header">
-                    <h2>Latest Stories</h2>
-                    <p>Fresh stories added regularly from our talented writers</p>
-                </div>
-                <div class="story-grid" id="storyGrid">
-                    <!-- Stories will be loaded here -->
-                </div>
-                <div class="load-more">
-                    <button id="loadMoreBtn">Load More Stories</button>
-                </div>
-            </div>
-        </section>
-    </main>
+      <div class="nav-toggle">
+        <span></span><span></span><span></span>
+      </div>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>DesiStory</h3>
-                    <p>दिल से लिखी कहानियाँ - Your destination for amazing Hindi stories and cultural narratives.</p>
-                    <div class="footer-social">
-                        <a href="#" aria-label="Facebook">📘</a>
-                        <a href="#" aria-label="Twitter">🐦</a>
-                        <a href="#" aria-label="Instagram">📷</a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="#stories">Stories</a></li>
-                        <li><a href="#categories">Categories</a></li>
-                        <li><a href="/about">About Us</a></li>
-                        <li><a href="/contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="/privacy">Privacy Policy</a></li>
-                        <li><a href="/terms">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Newsletter</h4>
-                    <p>Subscribe to get the latest stories delivered to your inbox</p>
-                    <div class="newsletter-form">
-                        <input type="email" placeholder="Your email address">
-                        <button type="submit">Subscribe</button>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 DesiStory. All rights reserved. Made with ❤️ for Hindi story lovers.</p>
-            </div>
+    </div>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<main class="main">
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+
+      <h1 class="hero-headline" id="heroHeadline">
+        Discover Amazing Hindi Stories
+      </h1>
+
+      <p class="hero-tagline" id="heroTagline">
+        Explore our collection of traditional folk tales, modern narratives, and cultural stories from India
+      </p>
+
+      <!-- Featured Story -->
+      <div class="featured-story">
+        <span class="featured-story-label">✨ Featured Story</span>
+        <div class="featured-story-card" id="featuredStoryCard">
+          <!-- Loaded from Firebase -->
+          <p>Loading featured story...</p>
         </div>
-    </footer>
+      </div>
 
-    <script src="assets/js/main.js"></script>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SEARCH ================= -->
+<section class="search-section">
+  <div class="container">
+    <div class="search-container">
+      <label class="search-label">Search for your favorite stories</label>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search stories, categories, or keywords...">
+        <button id="searchBtn">Search</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CATEGORIES ================= -->
+<section id="categories" class="categories">
+  <div class="container">
+
+    <div class="categories-header">
+      <h2>Explore Categories</h2>
+      <p>Discover stories across different genres and themes</p>
+    </div>
+
+    <div class="category-grid" id="categoryGrid">
+      <!-- From Firebase -->
+      <p>Loading categories...</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= STORIES ================= -->
+<section id="stories" class="latest-stories">
+  <div class="container">
+
+    <div class="stories-header">
+      <h2>Latest Stories</h2>
+      <p>Fresh stories added regularly from our talented writers</p>
+    </div>
+
+    <div class="story-grid" id="storyGrid">
+      <!-- From Firebase -->
+      <p>Loading stories...</p>
+    </div>
+
+    <div class="load-more">
+      <button id="loadMoreBtn">Load More Stories</button>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="container">
+
+    <div class="footer-content">
+
+      <div class="footer-section">
+        <h3 id="footerTitle">DesiStory</h3>
+        <p>दिल से लिखी कहानियाँ - Your destination for amazing Hindi stories and cultural narratives.</p>
+        <div class="footer-social">
+          <a href="#">📘</a>
+          <a href="#">🐦</a>
+          <a href="#">📷</a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="#stories">Stories</a></li>
+          <li><a href="#categories">Categories</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Newsletter</h4>
+        <p>Subscribe to get the latest stories delivered to your inbox</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Your email address">
+          <button type="submit">Subscribe</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2024 <span id="footerSiteName">DesiStory</span>. All rights reserved.</p>
+    </div>
+
+  </div>
+</footer>
+
+<!-- ================= JS ================= -->
+<script type="module" src="assets/js/main.js"></script>
+
 </body>
 </html>
+
