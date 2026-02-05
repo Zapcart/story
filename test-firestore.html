@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firestore Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        #results { white-space: pre-wrap; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>Firebase Firestore Test</h1>
+    
+    <div class="test-section">
+        <h3>Test Connection</h3>
+        <button onclick="testConnection()">Test Firestore Connection</button>
+        <div id="connectionResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Add Test Story</h3>
+        <button onclick="addTestStory()">Add Test Story</button>
+        <div id="addResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Fetch Stories</h3>
+        <button onclick="fetchStories()">Fetch Published Stories</button>
+        <div id="fetchResult"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>Console Output</h3>
+        <pre id="results"></pre>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCGFiKZoeVJvWOlNqJS-Mf9SHzSpK_XQxo",
+            authDomain: "story-34914.firebaseapp.com",
+            databaseURL: "https://story-34914-default-rtdb.firebaseio.com",
+            projectId: "story-34914",
+            storageBucket: "story-34914.firebasestorage.app",
+            messagingSenderId: "86978846669",
+            appId: "1:86978846669:web:e3237eaaad3bf8c392ae84",
+            measurementId: "G-8Z8WKDQ8TG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const firestore = getFirestore(app);
+
+        function log(message) {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            results.textContent += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        }
+
+        window.testConnection = async function() {
+            const resultDiv = document.getElementById('connectionResult');
+            try {
+                log('Testing Firestore connection...');
+                const testQuery = query(collection(firestore, 'stories'), limit(1));
+                await getDocs(testQuery);
+                resultDiv.innerHTML = '<div class="success">✅ Firestore connection successful!</div>';
+                log('✅ Connection successful');
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Connection failed: ${error.message}</div>`;
+                log(`❌ Connection failed: ${error.message}`);
+            }
+        };
+
+        window.addTestStory = async function() {
+            const resultDiv = document.getElementById('addResult');
+            try {
+                log('Adding test story...');
+                const testStory = {
+                    title: 'Test Story ' + Date.now(),
+                    slug: 'test-story-' + Date.now(),
+                    category: 'test',
+                    excerpt: 'This is a test story added via the test page.',
+                    body: 'This is the full content of the test story. It should appear on the main website if everything is working correctly.',
+                    featured: false,
+                    status: 'published',
+                    publish_date: new Date(),
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+                
+                const docRef = await addDoc(collection(firestore, 'stories'), testStory);
+                resultDiv.innerHTML = `<div class="success">✅ Test story added with ID: ${docRef.id}</div>`;
+                log(`✅ Test story added with ID: ${docRef.id}`);
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Failed to add story: ${error.message}</div>`;
+                log(`❌ Failed to add story: ${error.message}`);
+            }
+        };
+
+        window.fetchStories = async function() {
+            const resultDiv = document.getElementById('fetchResult');
+            try {
+                log('Fetching published stories...');
+                const storiesQuery = query(
+                    collection(firestore, 'stories'),
+                    where('status', '==', 'published'),
+                    orderBy('publish_date', 'desc'),
+                    limit(5)
+                );
+                
+                const querySnapshot = await getDocs(storiesQuery);
+                const stories = [];
+                
+                querySnapshot.forEach((doc) => {
+                    stories.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                resultDiv.innerHTML = `<div class="success">✅ Found ${stories.length} published stories</div>`;
+                log(`✅ Found ${stories.length} published stories:`);
+                stories.forEach(story => {
+                    log(`  - ${story.title} (${story.id})`);
+                });
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Failed to fetch stories: ${error.message}</div>`;
+                log(`❌ Failed to fetch stories: ${error.message}`);
+            }
+        };
+
+        log('Firebase Firestore test page loaded');
+    </script>
+</body>
+</html>

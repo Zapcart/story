@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // 🔥 Firebase Config (same as frontend)
 const firebaseConfig = {
@@ -16,6 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
+const firestore = getFirestore(app);
 
 // UI Elements
 const loginBox = document.getElementById("loginBox");
@@ -71,39 +73,100 @@ document.getElementById("addCategoryBtn").onclick = () => {
 };
 
 // Add Story
-document.getElementById("addStoryBtn").onclick = () => {
-  const newRef = push(ref(db, "stories"));
-  set(newRef, {
-    title: storyTitle.value,
-    slug: storySlug.value,
-    category: storyCategory.value,
-    excerpt: storyExcerpt.value,
-    body: storyBody.value,
-    featured: storyFeatured.value === "true",
-    createdAt: Date.now()
-  });
-  alert("Story added!");
+document.getElementById("addStoryBtn").onclick = async () => {
+  try {
+    const storyData = {
+      title: storyTitle.value,
+      slug: storySlug.value,
+      category: storyCategory.value,
+      excerpt: storyExcerpt.value,
+      body: storyBody.value,
+      featured: storyFeatured.value === "true",
+      status: "published", // Default status to published
+      publish_date: new Date(), // Current timestamp
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    
+    const docRef = await addDoc(collection(firestore, "stories"), storyData);
+    console.log("Story added with ID: ", docRef.id);
+    alert("Story added successfully!");
+    
+    // Clear form
+    storyTitle.value = "";
+    storySlug.value = "";
+    storyCategory.value = "";
+    storyExcerpt.value = "";
+    storyBody.value = "";
+    storyFeatured.value = "false";
+    
+    // Reload stories list
+    loadStories();
+    
+  } catch (error) {
+    console.error("Error adding story:", error);
+    alert("Error adding story: " + error.message);
+  }
 };
 
 // Load Stories
-function loadStories() {
+async function loadStories() {
   const storyList = document.getElementById("storyList");
-  onValue(ref(db, "stories"), (snap) => {
+  if (!storyList) return;
+  
+  try {
+    console.log("Loading stories from Firestore...");
+    
+    const storiesQuery = query(
+      collection(firestore, "stories"),
+      orderBy("createdAt", "desc")
+    );
+    
+    const querySnapshot = await getDocs(storiesQuery);
     storyList.innerHTML = "";
-    if (!snap.exists()) return;
-
-    const data = snap.val();
-    Object.keys(data).forEach(id => {
-      const s = data[id];
+    
+    if (querySnapshot.empty) {
+      storyList.innerHTML = "<p>No stories found.</p>";
+      return;
+    }
+    
+    querySnapshot.forEach((doc) => {
+      const story = doc.data();
+      const storyId = doc.id;
+      
       const div = document.createElement("div");
       div.className = "card";
       div.innerHTML = `
-        <strong>${s.title}</strong><br>
-        Category: ${s.category}<br>
-        Featured: ${s.featured}<br>
-        <small>ID: ${id}</small>
+        <strong>${story.title || "Untitled"}</strong><br>
+        Category: ${story.category || "General"}<br>
+        Status: ${story.status || "draft"}<br>
+        Featured: ${story.featured ? "Yes" : "No"}<br>
+        Published: ${story.publish_date ? new Date(story.publish_date.toDate ? story.publish_date.toDate() : story.publish_date).toLocaleDateString() : "Not set"}<br>
+        <small>ID: ${storyId}</small>
+        <button onclick="deleteStory('${storyId}')" style="margin-top: 10px; background: #ff4444; color: white; border: none; padding: 5px 10px; cursor: pointer;">Delete</button>
       `;
       storyList.appendChild(div);
     });
-  });
+    
+    console.log(`Loaded ${querySnapshot.docs.length} stories`);
+    
+  } catch (error) {
+    console.error("Error loading stories:", error);
+    storyList.innerHTML = "<p>Error loading stories. Please refresh.</p>";
+  }
+}
+
+// Delete Story
+window.deleteStory = async function(storyId) {
+  if (!confirm("Are you sure you want to delete this story?")) return;
+  
+  try {
+    await deleteDoc(doc(firestore, "stories", storyId));
+    console.log("Story deleted successfully");
+    alert("Story deleted successfully!");
+    loadStories();
+  } catch (error) {
+    console.error("Error deleting story:", error);
+    alert("Error deleting story: " + error.message);
+  }
 }

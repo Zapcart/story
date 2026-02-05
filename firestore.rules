@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Stories collection - public read for published stories, auth required for writes
+    match /stories/{storyId} {
+      // Allow read access to all stories (frontend will filter by status)
+      allow read: if true;
+      
+      // Allow write/update/delete only for authenticated users
+      allow write, update, delete: if request.auth != null;
+      
+      // Additional validation for writes
+      allow create: if request.auth != null &&
+        request.resource.data.title is string &&
+        request.resource.data.slug is string &&
+        request.resource.data.status in ['draft', 'published', 'archived'] &&
+        request.resource.data.category is string &&
+        request.resource.data.body is string;
+    }
+    
+    // Categories collection - public read, auth required for writes
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write, update, delete: if request.auth != null;
+    }
+    
+    // Site settings - public read, auth required for writes
+    match /site/{documentId} {
+      allow read: if true;
+      allow write, update, delete: if request.auth != null;
+    }
+  }
+}
