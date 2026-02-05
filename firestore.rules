@@ -13,9 +13,11 @@ service cloud.firestore {
       allow create: if request.auth != null &&
         request.resource.data.title is string &&
         request.resource.data.slug is string &&
-        request.resource.data.status in ['draft', 'published', 'archived'] &&
+        request.resource.data.status in ['draft', 'published', 'scheduled', 'archived'] &&
         request.resource.data.category is string &&
-        request.resource.data.body is string;
+        request.resource.data.body is string &&
+        request.resource.data.views is number &&
+        request.resource.data.views == 0; // Views should start at 0
     }
     
     // Categories collection - public read, auth required for writes
@@ -28,6 +30,11 @@ service cloud.firestore {
     match /site/{documentId} {
       allow read: if true;
       allow write, update, delete: if request.auth != null;
+    }
+    
+    // Analytics collection - auth required for all operations
+    match /analytics/{documentId} {
+      allow read, write, update, delete: if request.auth != null;
     }
   }
 }

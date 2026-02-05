@@ -142,7 +142,7 @@ async function loadFeaturedStory() {
           <span class="date">${formatDate(story.publish_date)}</span>
           ${story.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
         </div>
-        <a href="story.html?id=${storyId}" class="read-more-btn">Read Full Story</a>
+        <a href="story-enhanced.html?id=${storyId}" class="read-more-btn">Read Full Story</a>
       </div>
     `;
     
@@ -209,7 +209,9 @@ async function loadLatestStories() {
       orderBy: "publish_date DESC"
     });
     
-    querySnapshot.forEach((doc) => {
+    // Insert ad after every 3 stories
+    let adCounter = 0;
+    querySnapshot.forEach((doc, index) => {
       const story = doc.data();
       const storyId = doc.id;
       
@@ -222,7 +224,8 @@ async function loadLatestStories() {
         publish_date: story.publish_date,
         category: story.category,
         hasExcerpt: !!story.excerpt,
-        hasCoverImage: !!story.cover_image
+        hasCoverImage: !!story.cover_image,
+        views: story.views || 0
       });
       
       const storyCard = document.createElement("div");
@@ -236,12 +239,28 @@ async function loadLatestStories() {
             <span class="category">${story.category || "General"}</span>
             <span class="date">${formatDate(story.publish_date)}</span>
             ${story.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
+            <span class="views">${(story.views || 0).toLocaleString()} views</span>
           </div>
-          <a href="story.html?id=${storyId}" class="read-more-btn">Read More</a>
+          <a href="story-enhanced.html?id=${storyId}" class="read-more-btn">Read More</a>
         </div>
       `;
       
       storyGrid.appendChild(storyCard);
+      
+      // Insert ad after every 3 stories (but not after the last one)
+      if ((index + 1) % 3 === 0 && index < querySnapshot.docs.length - 1) {
+        adCounter++;
+        const adContainer = document.createElement("div");
+        adContainer.className = "ad-container";
+        adContainer.innerHTML = `
+          <div class="ad-label">Advertisement</div>
+          <div class="ad-space">
+            <span>Ad Space (300x250)</span>
+          </div>
+        `;
+        storyGrid.appendChild(adContainer);
+        console.log(`📢 Inserted ad ${adCounter} after story ${index + 1}`);
+      }
     });
     
     console.log("🎯 Frontend rendering complete - Stories should now be visible");
@@ -379,6 +398,41 @@ style.textContent = `
   @keyframes slideIn {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
+  }
+  
+  .ad-container {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: #f3f4f6;
+    border: 1px dashed #d1d5db;
+    text-align: center;
+    border-radius: 8px;
+  }
+  
+  .ad-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+  }
+  
+  .ad-space {
+    min-height: 250px;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-size: 0.875rem;
+    border-radius: 4px;
+  }
+  
+  .views {
+    background: #10b981;
+    color: white;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
   }
 `;
 document.head.appendChild(style);

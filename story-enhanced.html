@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Loading Story...</title>
+    
+    <!-- SEO Meta Tags (will be dynamically updated) -->
+    <meta name="description" id="metaDescription" content="">
+    <meta name="keywords" id="metaKeywords" content="">
+    <meta name="author" id="metaAuthor" content="">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" id="ogTitle" content="">
+    <meta property="og:description" id="ogDescription" content="">
+    <meta property="og:image" id="ogImage" content="">
+    <meta property="og:url" id="ogUrl" content="">
+    <meta property="og:type" content="article">
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitterTitle" content="">
+    <meta name="twitter:description" id="twitterDescription" content="">
+    <meta name="twitter:image" id="twitterImage" content="">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" id="canonicalUrl" href="">
+    
+    <!-- JSON-LD Schema (will be dynamically inserted) -->
+    <script id="jsonLdSchema" type="application/ld+json"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-900);
+            background: var(--gray-50);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        /* Story Content */
+        .story-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .story-header {
+            position: relative;
+        }
+
+        .story-cover {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            background: var(--gray-200);
+        }
+
+        .story-content {
+            padding: 2rem;
+        }
+
+        .story-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .story-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .story-category {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .story-featured {
+            background: var(--warning);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .story-body {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--gray-700);
+            margin-bottom: 2rem;
+        }
+
+        .story-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        .story-body h2 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--gray-900);
+        }
+
+        .story-body h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem;
+            color: var(--gray-900);
+        }
+
+        /* Share Section */
+        .share-section {
+            padding: 2rem;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .share-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .share-whatsapp {
+            background: #25d366;
+            color: white;
+        }
+
+        .share-facebook {
+            background: #1877f2;
+            color: white;
+        }
+
+        .share-twitter {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .share-copy {
+            background: var(--gray-600);
+            color: white;
+        }
+
+        /* Related Stories */
+        .related-section {
+            padding: 2rem;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .related-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--gray-900);
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .related-card {
+            background: var(--gray-50);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .related-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .related-content {
+            padding: 1rem;
+        }
+
+        .related-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .related-meta {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        /* Ad Placements */
+        .ad-container {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--gray-100);
+            border: 1px dashed var(--gray-300);
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .ad-label {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .ad-space {
+            min-height: 250px;
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+
+        /* Trending Sidebar */
+        .trending-sidebar {
+            position: sticky;
+            top: 100px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .trending-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .trending-list {
+            list-style: none;
+        }
+
+        .trending-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .trending-link {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            transition: color 0.2s;
+        }
+
+        .trending-link:hover {
+            color: var(--primary);
+        }
+
+        .trending-views {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-500);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error State */
+        .error {
+            text-align: center;
+            padding: 3rem;
+            color: var(--danger);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .story-title {
+                font-size: 2rem;
+            }
+
+            .story-content {
+                padding: 1.5rem;
+            }
+
+            .share-buttons {
+                justify-content: center;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <span>📚</span>
+                    <span>DesiStory</span>
+                </a>
+                <nav class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="#" class="nav-link">Categories</a>
+                    <a href="#" class="nav-link">About</a>
+                    <a href="#" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="story-container">
+            <!-- Loading State -->
+            <div id="loadingState" class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading story...</p>
+            </div>
+
+            <!-- Story Content (will be dynamically loaded) -->
+            <div id="storyContent" style="display: none;">
+                <div class="story-header">
+                    <img id="storyCover" class="story-cover" style="display: none;" alt="Story cover">
+                </div>
+                <div class="story-content">
+                    <h1 id="storyTitle" class="story-title"></h1>
+                    <div class="story-meta">
+                        <span id="storyCategory" class="story-category"></span>
+                        <span id="storyFeatured" class="story-featured" style="display: none;">⭐ Featured</span>
+                        <span id="storyDate"></span>
+                        <span id="storyViews"></span>
+                        <span id="storyReadTime"></span>
+                    </div>
+                    <div id="storyBody" class="story-body"></div>
+                    
+                    <!-- Ad Placement -->
+                    <div class="ad-container">
+                        <div class="ad-label">Advertisement</div>
+                        <div class="ad-space">
+                            <!-- AdSense code will go here -->
+                            <span>Ad Space (300x250)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share Section -->
+                <div class="share-section">
+                    <h3 class="share-title">Share this story</h3>
+                    <div class="share-buttons">
+                        <button id="shareWhatsApp" class="share-btn share-whatsapp">
+                            <span>📱</span>
+                            <span>WhatsApp</span>
+                        </button>
+                        <button id="shareFacebook" class="share-btn share-facebook">
+                            <span>📘</span>
+                            <span>Facebook</span>
+                        </button>
+                        <button id="shareTwitter" class="share-btn share-twitter">
+                            <span>🐦</span>
+                            <span>Twitter</span>
+                        </button>
+                        <button id="shareCopy" class="share-btn share-copy">
+                            <span>📋</span>
+                            <span>Copy Link</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Related Stories -->
+                <div class="related-section">
+                    <h3 class="related-title">Related Stories</h3>
+                    <div id="relatedStories" class="related-grid">
+                        <!-- Related stories will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="error" style="display: none;">
+                <h3>Story Not Found</h3>
+                <p>The story you're looking for doesn't exist or has been removed.</p>
+                <a href="index.html" class="share-btn share-primary">Back to Home</a>
+            </div>
+        </div>
+
+        <!-- Trending Sidebar -->
+        <aside class="trending-sidebar">
+            <h3 class="trending-title">🔥 Trending Stories</h3>
+            <ul id="trendingList" class="trending-list">
+                <!-- Trending stories will be loaded here -->
+            </ul>
+        </aside>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, query, where, orderBy, limit, getDocs, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCGFiKZoeVJvWOlNqJS-Mf9SHzSpK_XQxo",
+            authDomain: "story-34914.firebaseapp.com",
+            projectId: "story-34914",
+            storageBucket: "story-34914.firebasestorage.app",
+            messagingSenderId: "86978846669",
+            appId: "1:86978846669:web:e3237eaaad3bf8c392ae84",
+            measurementId: "G-8Z8WKDQ8TG"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const firestore = getFirestore(app);
+
+        // Get story ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const storyId = urlParams.get('id');
+
+        let currentStory = null;
+
+        // Load Story
+        async function loadStory() {
+            if (!storyId) {
+                showError();
+                return;
+            }
+
+            try {
+                const storyDoc = await getDoc(doc(firestore, 'stories', storyId));
+                
+                if (!storyDoc.exists()) {
+                    showError();
+                    return;
+                }
+
+                currentStory = { id: storyDoc.id, ...storyDoc.data() };
+                
+                // Increment views
+                await updateDoc(doc(firestore, 'stories', storyId), {
+                    views: increment(1)
+                });
+
+                renderStory();
+                updateSEO();
+                loadRelatedStories();
+                loadTrendingStories();
+                
+            } catch (error) {
+                console.error('Error loading story:', error);
+                showError();
+            }
+        }
+
+        // Render Story
+        function renderStory() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('storyContent').style.display = 'block';
+
+            const story = currentStory;
+
+            // Story Title
+            document.getElementById('storyTitle').textContent = story.title || 'Untitled Story';
+
+            // Story Cover
+            const coverImg = document.getElementById('storyCover');
+            if (story.cover_image) {
+                coverImg.src = story.cover_image;
+                coverImg.style.display = 'block';
+                coverImg.onerror = () => coverImg.style.display = 'none';
+            }
+
+            // Story Meta
+            document.getElementById('storyCategory').textContent = story.category || 'General';
+            document.getElementById('storyDate').textContent = formatDate(story.publish_date);
+            document.getElementById('storyViews').textContent = `${(story.views || 0).toLocaleString()} views`;
+            document.getElementById('storyReadTime').textContent = `${calculateReadTime(story.body)} min read`;
+
+            if (story.featured) {
+                document.getElementById('storyFeatured').style.display = 'inline-block';
+            }
+
+            // Story Body (convert line breaks to paragraphs)
+            const bodyContent = story.body || '';
+            const formattedBody = bodyContent
+                .split('\n\n')
+                .map(paragraph => `<p>${paragraph}</p>`)
+                .join('');
+            
+            document.getElementById('storyBody').innerHTML = formattedBody;
+
+            // Setup share buttons
+            setupShareButtons();
+        }
+
+        // Update SEO
+        function updateSEO() {
+            const story = currentStory;
+            const baseUrl = window.location.origin;
+            const storyUrl = `${baseUrl}/story-enhanced.html?id=${story.id}`;
+            
+            // Basic SEO
+            document.title = story.seo_title || story.title || 'Story';
+            document.getElementById('metaDescription').content = story.seo_description || story.excerpt || '';
+            document.getElementById('metaKeywords').content = `${story.category}, stories, desi stories, ${story.title}`;
+            document.getElementById('metaAuthor').content = story.author || 'DesiStory';
+            
+            // Open Graph
+            document.getElementById('ogTitle').content = story.seo_title || story.title || '';
+            document.getElementById('ogDescription').content = story.seo_description || story.excerpt || '';
+            document.getElementById('ogImage').content = story.og_image || story.cover_image || '';
+            document.getElementById('ogUrl').content = storyUrl;
+            
+            // Twitter Card
+            document.getElementById('twitterTitle').content = story.seo_title || story.title || '';
+            document.getElementById('twitterDescription').content = story.seo_description || story.excerpt || '';
+            document.getElementById('twitterImage').content = story.og_image || story.cover_image || '';
+            
+            // Canonical URL
+            document.getElementById('canonicalUrl').href = storyUrl;
+            
+            // JSON-LD Schema
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "Article",
+                "headline": story.title || '',
+                "description": story.seo_description || story.excerpt || '',
+                "image": story.og_image || story.cover_image || '',
+                "author": {
+                    "@type": "Person",
+                    "name": story.author || 'DesiStory'
+                },
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "DesiStory",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "url": `${baseUrl}/logo.png`
+                    }
+                },
+                "datePublished": story.publish_date ? new Date(story.publish_date).toISOString() : '',
+                "dateModified": story.updatedAt ? new Date(story.updatedAt).toISOString() : '',
+                "mainEntityOfPage": storyUrl
+            };
+            
+            document.getElementById('jsonLdSchema').textContent = JSON.stringify(schema, null, 2);
+        }
+
+        // Setup Share Buttons
+        function setupShareButtons() {
+            const story = currentStory;
+            const storyUrl = window.location.href;
+            const shareText = `Check out this amazing story: ${story.title}`;
+            
+            // WhatsApp
+            document.getElementById('shareWhatsApp').onclick = () => {
+                window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + storyUrl)}`, '_blank');
+            };
+            
+            // Facebook
+            document.getElementById('shareFacebook').onclick = () => {
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(storyUrl)}`, '_blank');
+            };
+            
+            // Twitter
+            document.getElementById('shareTwitter').onclick = () => {
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(storyUrl)}`, '_blank');
+            };
+            
+            // Copy Link
+            document.getElementById('shareCopy').onclick = () => {
+                navigator.clipboard.writeText(storyUrl).then(() => {
+                    showToast('Link Copied!', 'Story link copied to clipboard', 'success');
+                });
+            };
+        }
+
+        // Load Related Stories
+        async function loadRelatedStories() {
+            try {
+                const relatedQuery = query(
+                    collection(firestore, 'stories'),
+                    where('status', '==', 'published'),
+                    where('category', '==', currentStory.category),
+                    where('id', '!=', currentStory.id),
+                    orderBy('publish_date', 'desc'),
+                    limit(3)
+                );
+                
+                const querySnapshot = await getDocs(relatedQuery);
+                const relatedContainer = document.getElementById('relatedStories');
+                
+                if (querySnapshot.empty) {
+                    relatedContainer.innerHTML = '<p>No related stories found.</p>';
+                    return;
+                }
+                
+                let relatedHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const story = doc.data();
+                    relatedHTML += `
+                        <div class="related-card" onclick="window.location.href='story-enhanced.html?id=${doc.id}'">
+                            ${story.cover_image ? `<img src="${story.cover_image}" alt="${story.title}" onerror="this.style.display='none'">` : ''}
+                            <div class="related-content">
+                                <h4 class="related-title">${story.title || 'Untitled'}</h4>
+                                <div class="related-meta">
+                                    <span>${story.category || 'General'}</span>
+                                    <span>${formatDate(story.publish_date)}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                relatedContainer.innerHTML = relatedHTML;
+                
+            } catch (error) {
+                console.error('Error loading related stories:', error);
+            }
+        }
+
+        // Load Trending Stories
+        async function loadTrendingStories() {
+            try {
+                const trendingQuery = query(
+                    collection(firestore, 'stories'),
+                    where('status', '==', 'published'),
+                    orderBy('views', 'desc'),
+                    limit(5)
+                );
+                
+                const querySnapshot = await getDocs(trendingQuery);
+                const trendingList = document.getElementById('trendingList');
+                
+                let trendingHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const story = doc.data();
+                    trendingHTML += `
+                        <li class="trending-item">
+                            <a href="story-enhanced.html?id=${doc.id}" class="trending-link">
+                                ${story.title || 'Untitled'}
+                            </a>
+                            <div class="trending-views">${(story.views || 0).toLocaleString()} views</div>
+                        </li>
+                    `;
+                });
+                
+                trendingList.innerHTML = trendingHTML;
+                
+            } catch (error) {
+                console.error('Error loading trending stories:', error);
+            }
+        }
+
+        // Utility Functions
+        function formatDate(timestamp) {
+            if (!timestamp) return 'No date';
+            
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function calculateReadTime(content) {
+            const wordsPerMinute = 200;
+            const words = content.split(/\s+/).length;
+            return Math.ceil(words / wordsPerMinute);
+        }
+
+        function showToast(title, message, type = 'info') {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.getElementById('toastContainer');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toastContainer';
+                toastContainer.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                `;
+                document.body.appendChild(toastContainer);
+            }
+            
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                padding: 16px;
+                min-width: 300px;
+                max-width: 400px;
+                border-left: 4px solid ${type === 'success' ? '#10b981' : '#3b82f6'};
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            toast.innerHTML = `
+                <div style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">${title}</div>
+                <div style="font-size: 14px; color: #6b7280;">${message}</div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease-out reverse';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        function showError() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('errorState').style.display = 'block';
+        }
+
+        // Add slide-in animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        if (storyId) {
+            loadStory();
+        } else {
+            showError();
+        }
+    </script>
+</body>
+</html>
