@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DesiStory - Stories Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f2ed;
+            color: #3e2723;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            color: #ff8c42;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        #storiesContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .story-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .story-card h3 {
+            padding: 1rem 1rem 0.5rem;
+            color: #3e2723;
+            font-size: 1.2rem;
+        }
+
+        .story-card p {
+            padding: 0 1rem 1rem;
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .story-meta {
+            padding: 0 1rem 1rem;
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .story-meta .date {
+            font-weight: 500;
+        }
+
+        .story-meta .category {
+            background: #ff8c42;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 3rem;
+            color: #d32f2f;
+            background: #ffebee;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            #storiesContainer {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔥 DesiStory</h1>
+            <p>दिल से लिखी कहानियाँ - Stories from Firebase</p>
+        </header>
+
+        <main>
+            <div id="storiesContainer" class="loading">
+                <p>🔥 Loading stories from Firebase...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase Stories Loader -->
+    <script type="module" src="stories-loader.js"></script>
+</body>
+</html>

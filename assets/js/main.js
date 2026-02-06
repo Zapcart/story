@@ -315,7 +315,92 @@ function setupRealtimeUpdates() {
             case 'modified':
               console.log("✏️ Story modified:", story.title);
               console.log("📄 Raw Firestore doc:", story);
-              showToast("Story Updated", `"${story.title}" has been updated`, "info");
+              class StoryWebsite {
+                constructor() {
+                  this.stories = [];
+                  this.categories = [];
+                  this.homepageSettings = {};
+                  this.siteSettings = {};
+                  this.currentPage = 1;
+                  this.storiesPerPage = 9;
+                  this.filteredStories = [];
+                  this.isLoading = false;
+                  this.useFirebase = window.db !== undefined;
+                  this.init();
+                }
+
+                async init() {
+                  this.showLoadingState();
+                  
+                  if (this.useFirebase) {
+                    console.log('🔥 Using Firebase Firestore');
+                    await this.loadFromFirebase();
+                  } else {
+                    console.log('📁 Using local files (fallback)');
+                    await this.loadFromLocalFiles();
+                  }
+                  
+                  this.setupEventListeners();
+                  this.renderSiteBranding();
+                  this.renderHomepage();
+                  this.renderCategories();
+                  this.renderStories();
+                  this.renderFooter();
+                  this.hideLoadingState();
+                }
+
+                async loadFromFirebase() {
+                  try {
+                    // Load site settings
+                    const siteDoc = await db.collection('site').doc('settings').get();
+                    if (siteDoc.exists) {
+                      this.siteSettings = siteDoc.data();
+                      console.log('✅ Site settings loaded from Firebase');
+                    }
+
+                    // Load homepage settings
+                    const homeDoc = await db.collection('homepage').doc('settings').get();
+                    if (homeDoc.exists) {
+                      this.homepageSettings = homeDoc.data();
+                      console.log('✅ Homepage settings loaded from Firebase');
+                    }
+
+                    // Load categories
+                    const categoriesSnapshot = await db.collection('categories').get();
+                    this.categories = categoriesSnapshot.docs.map(doc => ({
+                      id: doc.id,
+                      ...doc.data()
+                    }));
+                    console.log(`✅ ${this.categories.length} categories loaded from Firebase`);
+
+                    // Load published stories only
+                    const storiesSnapshot = await db.collection('stories')
+                      .where('status', '==', 'published')
+                      .orderBy('publish_date', 'desc')
+                      .get();
+                    
+                    this.stories = storiesSnapshot.docs.map(doc => ({
+                      id: doc.id,
+                      ...doc.data()
+                    }));
+                    console.log(`✅ ${this.stories.length} stories loaded from Firebase`);
+
+                    this.filteredStories = [...this.stories];
+                  } catch (error) {
+                    console.error('❌ Firebase loading error:', error);
+                    // Fallback to local files
+                    await this.loadFromLocalFiles();
+                  }
+                }
+
+                async loadFromLocalFiles() {
+                  await this.loadSiteSettings();
+                  await this.loadHomepageSettings();
+                  await this.loadCategories();
+                  await this.loadStories();
+                }
+              }
+              console.log("✅ Real-time updates setup complete");
               break;
             case 'removed':
               console.log("🗑️ Story removed:", story.title);
